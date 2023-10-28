@@ -16,20 +16,23 @@
             <input type="text" id="search">
         </div>
     </header>
-    <div class="character-list">
+    <div id="character-list" class="character-list">
 
     </div>
     <div class="page-nav-buttons">
-        <button id="previous">1</button>
-        <button id="next">2</button>
+        <button id="previous">Previous page</button>
+        <button id="next">Next page</button>
     </div>
     <script>
-        search.onkeydown = (e) => {
+        let search = document.getElementById("search");
+        search.onkeydown = async (e) => {
             if (e.key === "Enter") {
-                getCharacters(e.srcElement.value);
+                setCharacterList(await findCharacters(e.srcElement.value));
             }
         }
+        (async () => {
+            setCharacterList(await getCharactersPage());
+        })();
     </script>
 </body>
-
 </html>

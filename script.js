@@ -13,18 +13,89 @@ graphql: https://rickandmortyapi.com/documentation/#graphql
 REST: https://rickandmortyapi.com/documentation/#rest
  */
 
+async function setCharacterList(responseJson) {
+    if (Object.keys(responseJson).find(c => c === "error")) {
+        console.log('error, ' + c);
+    }
+    else if (!Object.keys(responseJson).find(c => c === "results")){
+        console.log(responseJson);
+        console.log("something went wrong");
+    }
+    else {
+        displayCharacters(responseJson.results);
+        setNavButtons(responseJson.info);
+    }
+}
 
-async function getCharacters(search = "") {
+function setNavButtons(info) {
+    let prev = document.getElementById("previous");
+    if(!info.prev){
+        prev.onclick = () => {};
+        prev.disabled = true;
+    } else {
+        prev.onclick = async () => {
+            setCharacterList(await getCharactersPage(info.prev));
+        }
+        prev.disabled = false;
+    }
+    let next = document.getElementById("next");
+    if(!info.next){
+        next.onclick = () => {}
+        next.disabled = true;
+    } else {
+        next.onclick = async () => {
+            setCharacterList(await getCharactersPage(info.next));
+        }
+        next.disabled = false;
+
+    }
+}
+
+/* Każdy kafelek z postacią powinien zawierać dane takie jak: name, image, species.
+W przypadku braku grafiki wyświetlić dowolny placeholder. */
+
+function displayCharacters(charLi) {
+    let charContainer = document.getElementById('character-list');
+    charContainer.innerHTML = "";
+    console.log(charLi);
+    for(let ch of charLi){
+        let tile = document.createElement("div");
+        tile.setAttribute("class", "character-tile");
+
+        let tileName = document.createElement("p");
+        tileName.setAttribute("class", "character-tile__name");
+        tileName.textContent = ch.name;
+
+        let tileSpecies = document.createElement("p");
+        tileSpecies.setAttribute("class", "character-tile__species");
+        tileSpecies.textContent = ch.species;
+
+        let tileImage = document.createElement("img");
+        tileImage.setAttribute("class", "character-tile__image");
+        tileImage.setAttribute("src", ch.image);
+
+        tile.append(tileImage, tileName, tileSpecies);
+        charContainer.appendChild(tile);
+    }
+}
+
+async function getCharactersPage(page = null) {
     let characters = null;
-    if (!search) {
+    if (!page) {
         let response = await fetch("https://rickandmortyapi.com/api/character");
         characters = await response.json();
     }
     else {
-        let response = await (fetch("https://rickandmortyapi.com/api/character/?name=" + search));
+        let response = await (fetch(page));
         characters = await response.json();
-        console.log("else");
     }
-    console.log(characters);
+
+    return characters;
+}
+
+async function findCharacters(name) {
+    let response = await (fetch("https://rickandmortyapi.com/api/character/?name=" + name));
+    let characters = await response.json();
+
     return characters;
 }
