@@ -74,8 +74,14 @@ function displayCharacters(charLi) {
         tileImage.setAttribute("class", "character-tile__image");
         tileImage.setAttribute("src", ch.image);
 
+        let link = document.createElement("a");
+        link.setAttribute("href", "character.html?id="+ch.id);
+
+        link.appendChild(tile);
+
         tile.append(tileImage, tileName, tileSpecies);
-        charContainer.appendChild(tile);
+
+        charContainer.appendChild(link);
     }
 }
 

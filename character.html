@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rick and Morty compendium - character</title>
+    <script src="character-script.js"></script>
+    <link rel="stylesheet" href="character-style.css">
+</head>
+
+<body>
+    <header>
+        <div>
+            <h1>Rick and Morty compendium</h1>
+            <h3 id="char-name"></h3>
+        </div>
+        <div>
+            <a href="index.html">Back to main page</a>
+        </div>
+    </header>
+    <div id="char-info">
+
+    </div>
+    <script>
+        (async () => {
+
+        })();
+
+        getCharacterDetails();
+        console.log(window.location);
+
+        async function getCharacterDetails() {
+            let url = new URL(window.location);
+            let id = url.searchParams.get('id');
+            if (!id) {
+                handleError("wrong character id");
+                return;
+            }
+            let resp = await fetch('https://rickandmortyapi.com/api/character/' + id);
+            let char = await resp.json();
+            if (Object.keys(char).find(e => e === "error")) {
+                handleError(e);
+                return;
+            }
+
+            populateCharInfo(char);
+        }
+
+        function handleError(errmsg) {
+            let err = document.createElement("h1");
+            err.textContent = errmsg;
+            document.getElementById("char-info").appendChild(err);
+        }
+
+        async function populateCharInfo(char) {
+            let details = document.createElement("div");
+            details.setAttribute("class", "char-info__details");
+
+            let name = document.createElement("p");
+            name.textContent = `Character name: ${char.name}`;
+
+            let gender = document.createElement("p");
+            gender.textContent = `Gender: ${char.gender}`;
+
+            let location = document.createElement("p");
+            location.textContent = `Location: ${location.name}`;
+
+            let status = document.createElement("p");
+            status.textContent = `Status: ${char.status}`;
+
+            details.append(name, gender, location, status);
+
+            let episodes = document.createElement("div");
+
+            let episodesText = document.createElement("h3");
+            episodesText.textContent = "Episode list:";
+            episodes.appendChild(episodesText);
+
+            document.getElementById("char-info").appendChild(details);
+
+            for (let epAddr of char.episode) {
+                let resp = await fetch(epAddr);
+                let ep = await resp.json();
+                if (Object.keys(char).find(e => e === "error")) {
+                    handleError(e);
+                    return;
+                }
+                let episode = document.createElement("div");
+                episode.setAttribute("class", "episode");
+
+                let epno = document.createElement("p");
+                epno.textContent = ep.episode;
+
+                let epname = document.createElement("p");
+                epname.textContent = ep.name;
+
+                episode.appendChild(epno);
+                episode.appendChild(epname);
+
+                episodes.appendChild(episode);
+            }
+            
+            document.getElementById("char-info").appendChild(episodes);
+        }
+    </script>
+</body>
+
+</html>
