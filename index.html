@@ -4,26 +4,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Rick and Morty compendium</title>
     <script src="script.js"></script>
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
     <header>
-        <h1>Rick and Morty compendium</h1>
-        <div>
-            <label for="search">Search characters:</label>
-            <input type="text" id="search">
+        <div class="header-and-search">
+            <h1>Rick and Morty compendium</h1>
+            <div class="page-nav-search">
+                <label for="search">Search characters:</label>
+                <input type="text" id="search">
+            </div>
+        </div>
+        <div class="page-nav-buttons">
+            <div class="nav-button" id="previous">Previous page</div>
+            <div class="nav-button" id="next">Next page</div>
         </div>
     </header>
     <div id="character-list" class="character-list">
 
     </div>
-    <div class="page-nav-buttons">
-        <button id="previous">Previous page</button>
-        <button id="next">Next page</button>
-    </div>
+
     <script>
         let search = document.getElementById("search");
         search.onkeydown = async (e) => {

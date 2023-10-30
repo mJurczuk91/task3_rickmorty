@@ -15,10 +15,9 @@ REST: https://rickandmortyapi.com/documentation/#rest
 
 async function setCharacterList(responseJson) {
     if (Object.keys(responseJson).find(c => c === "error")) {
-        console.log('error, ' + c);
+        console.log('error, ' + responseJson.error);
     }
     else if (!Object.keys(responseJson).find(c => c === "results")){
-        console.log(responseJson);
         console.log("something went wrong");
     }
     else {
@@ -31,22 +30,22 @@ function setNavButtons(info) {
     let prev = document.getElementById("previous");
     if(!info.prev){
         prev.onclick = () => {};
-        prev.disabled = true;
+        prev.setAttribute("class", "nav-button__inactive")
     } else {
         prev.onclick = async () => {
             setCharacterList(await getCharactersPage(info.prev));
         }
-        prev.disabled = false;
+        prev.setAttribute("class", "nav-button__active")
     }
     let next = document.getElementById("next");
     if(!info.next){
         next.onclick = () => {}
-        next.disabled = true;
+        next.setAttribute("class", "nav-button__inactive")
     } else {
         next.onclick = async () => {
             setCharacterList(await getCharactersPage(info.next));
         }
-        next.disabled = false;
+        next.setAttribute("class", "nav-button__active")
 
     }
 }
